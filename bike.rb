@@ -1,6 +1,11 @@
 # Bike
 
+require_relative 'pannier'
+require 'forwardable'
+
 class Bike
+  
+  extend Forwardable
 
   STANDARD_WEIGHT = 200 # lbs
   MAX_CARGO_ITEMS = 10
@@ -13,27 +18,13 @@ class Bike
     @price = price
     @weight = weight
     @rented = rented
-    @cargo_contents = []
+    @cargo_contents = Pannier.new(MAX_CARGO_ITEMS)
   end
 
   def rent!
     self.rented = true
   end
 
-  def add_cargo(item)
-    self.cargo_contents << item
-  end
-
-  def remove_cargo(item)
-    self.cargo_contents.remove(item)
-  end
-
-  def pannier_capacity
-    MAX_CARGO_ITEMS
-  end
-
-  def pannier_remaining_capacity
-    MAX_CARGO_ITEMS - self.cargo_contents.size
-  end
+  def_delegators :@cargo_contents, :add_cargo, :remove_cargo, :remaining_capacity
 
 end
